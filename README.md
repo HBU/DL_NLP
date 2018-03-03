@@ -1,2 +1,4 @@
 # MachineLearning
-Pycharm + Anaconda
+- Pycharm
+- Anaconda
+- Python 3.6
