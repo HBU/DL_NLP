@@ -1,6 +1,4 @@
-# MachineLearning
-- Pycharm
-- Anaconda
+# DeepLearning NLP
 - Python 3.6
-
-[机器学习速成课程](https://developers.google.cn/machine-learning/crash-course/)
+- PyTorch 0.4
+- Jupyter
