@@ -3,7 +3,6 @@ from datetime import datetime
 import torch
 import torch.nn.functional as F
 from torch import nn
-from torch.autograd import Variable
 
 
 def get_acc(output, label):
@@ -22,21 +21,21 @@ def train(net, train_data, valid_data, num_epochs, optimizer, criterion):
         train_acc = 0
         net = net.train()
         for im, label in train_data:
-            if torch.cuda.is_available():
-                im = Variable(im.cuda())  # (bs, 3, h, w)
-                label = Variable(label.cuda())  # (bs, h, w)
-            else:
-                im = Variable(im)
-                label = Variable(label)
+#             if torch.cuda.is_available():
+#                 im = (im.cuda())  # (bs, 3, h, w)
+#                 label = (label.cuda())  # (bs, h, w)
+#             else:
+#                 im = (im)
+#                 label = (label)
             # forward
-            output = net(im)
+            output = net(im)            
             loss = criterion(output, label)
             # backward
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            train_loss += loss.data[0]
+            train_loss += loss.item()
             train_acc += get_acc(output, label)
 
         cur_time = datetime.now()
@@ -48,15 +47,19 @@ def train(net, train_data, valid_data, num_epochs, optimizer, criterion):
             valid_acc = 0
             net = net.eval()
             for im, label in valid_data:
-                if torch.cuda.is_available():
-                    im = Variable(im.cuda(), volatile=True)
-                    label = Variable(label.cuda(), volatile=True)
-                else:
-                    im = Variable(im, volatile=True)
-                    label = Variable(label, volatile=True)
+#                 if torch.cuda.is_available():
+#                     with torch.no_grad():
+#                         im = im.cuda()
+#                         label = label.cuda()
+#                 else:
+#                     with torch.no_grad():
+#                         im = im
+#                         label = label
+                
+                                 
                 output = net(im)
                 loss = criterion(output, label)
-                valid_loss += loss.data[0]
+                valid_loss += loss.item()
                 valid_acc += get_acc(output, label)
             epoch_str = (
                 "Epoch %d. Train Loss: %f, Train Acc: %f, Valid Loss: %f, Valid Acc: %f, "
